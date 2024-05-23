@@ -1,4 +1,3 @@
-
 public abstract class Conta implements IConta {
 	
 	private static final int AGENCIA_PADRAO = 1;
@@ -16,19 +15,31 @@ public abstract class Conta implements IConta {
 	}
 
 	@Override
-	public void sacar(double valor) {
+	public String sacar(double valor) {
+		verificarRetiradaDeMontanteNaConta(valor);
 		saldo -= valor;
+		return "Saque realizado com sucesso";
 	}
 
 	@Override
-	public void depositar(double valor) {
+	public String depositar(double valor) {
 		saldo += valor;
+		return "Depósito realizado com sucesso";
 	}
 
 	@Override
-	public void transferir(double valor, IConta contaDestino) {
+	public String transferir(double valor, IConta contaDestino) {
+		verificarRetiradaDeMontanteNaConta(valor);
 		this.sacar(valor);
 		contaDestino.depositar(valor);
+		return "Transferência realizada com sucesso";
+	}
+
+	// verifica se o valor solicitado para retirada é válido ou não e joga uma exceção se não for
+	private void verificarRetiradaDeMontanteNaConta(double valor) {
+		if (saldo < valor || valor < 0) {
+			throw new IllegalArgumentException("Quantia inválida!");
+		}
 	}
 
 	public int getAgencia() {
